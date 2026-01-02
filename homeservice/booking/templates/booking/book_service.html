@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book Service</title>
+</head>
+<body>
+    <h2>Book Service</h2>
+
+    <p><strong>Service:</strong> {{ service.name }}</p>
+    <p><strong>Location:</strong> {{ service.location }}</p>
+    <p><strong>Price:</strong> {{ service.price }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Confirm Booking</button>
+    </form>
+</body>
+</html>

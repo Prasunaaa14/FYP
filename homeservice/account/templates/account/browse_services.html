@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Browse Services | HomeService</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{% static 'account/css/browse_services.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar">
+    <div class="logo">
+        <div class="logo-box">H</div>
+        <span>HomeService</span>
+    </div>
+
+    <nav class="nav-links">
+    <a href="{% url 'customer_dashboard' %}" class="back-dashboard">
+        Back to Dashboard
+    </a>
+    </nav>
+
+    <div class="nav-actions">
+        <a href="{% url 'logout' %}" class="login-btn">Log Out</a>
+    </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+    <h1>Browse All Services</h1>
+    <p>Find the perfect service provider for your home needs</p>
+
+    <div class="search-bar">
+        <input type="text" placeholder="What service do you need?">
+        <input type="text" placeholder="Your location">
+        <button>Filter</button>
+    </div>
+</section>
+
+<!-- SERVICES GRID -->
+<section class="services">
+    <div class="service-card plumbing">
+        <div class="icon">💧</div>
+        <h3>Plumbing</h3>
+        <p>Leaks, repairs, installations & more</p>
+    </div>
+
+    <div class="service-card electrical">
+        <div class="icon">⚡</div>
+        <h3>Electrical</h3>
+        <p>Wiring, repairs, lighting solutions</p>
+    </div>
+
+    <div class="service-card cleaning">
+        <div class="icon">✨</div>
+        <h3>Cleaning</h3>
+        <p>Deep cleaning, regular maintenance</p>
+    </div>
+
+    <div class="service-card carpentry">
+        <div class="icon">🪵</div>
+        <h3>Carpentry</h3>
+        <p>Furniture, repairs, woodwork</p>
+    </div>
+
+    <div class="service-card painting">
+        <div class="icon">🎨</div>
+        <h3>Painting</h3>
+        <p>Interior & exterior painting</p>
+    </div>
+
+    <div class="service-card ac">
+        <div class="icon">❄️</div>
+        <h3>AC Repair</h3>
+        <p>Installation, servicing, repairs</p>
+    </div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,113 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Dashboard | HomeService</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{% static 'account/css/dashboard.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar">
+    <div class="nav-left">
+        <div class="logo-box">H</div>
+        <span class="brand">HomeService</span>
+    </div>
+<a href="{% url 'profile' %}" class="profile-link"> 
+    <div class="nav-right">
+        <div class="user-avatar">
+    👤
+</div>
+<div class="user-text">
+        <strong>{{ request.user.first_name }}</strong>
+        <span>Customer</span>
+    </div>
+</a>
+
+        <a href="{% url 'logout' %}" class="logout-btn" title="Logout">
+            ↪
+        </a>
+    </div>
+</header>
+
+
+<!-- MAIN CONTENT -->
+<main class="container">
+
+    <h1>Welcome back, {{ request.user.first_name }}!</h1>
+    <p class="subtitle">
+        Manage your bookings and find trusted service providers.
+    </p>
+
+    <!-- ACTION BUTTONS -->
+    <!-- ACTION BUTTONS -->
+<div class="actions">
+
+    <!-- Find Providers → goes to browse services -->
+    <a class="btn primary" href="{% url 'browse_services' %}">
+        🔍 Find Providers
+    </a>
+
+    <!-- Browse Services -->
+    <a class="btn" href="{% url 'browse_services' %}">
+        🏠 Browse Services
+    </a>
+
+    <!-- Messages (placeholder for now) -->
+    <a class="btn" href="#">
+        💬 Messages
+    </a>
+
+</div>
+
+
+    <!-- STATS -->
+    <section class="stats">
+        <div class="card">
+            <p class="card-title">Active Bookings</p>
+            <h2>0</h2>
+            <small>No active bookings</small>
+        </div>
+
+        <div class="card">
+            <p class="card-title">Completed</p>
+            <h2>0</h2>
+            <small>Total completed</small>
+        </div>
+
+        <div class="card">
+            <p class="card-title">Reviews Given</p>
+            <h2>0</h2>
+            <small>Help others decide</small>
+        </div>
+
+        <div class="card">
+            <p class="card-title">Messages</p>
+            <h2>0</h2>
+            <small>Unread messages</small>
+        </div>
+    </section>
+
+    <!-- BOOKINGS -->
+    <section class="bookings">
+        <h2>Your Bookings</h2>
+
+        <div class="empty-state">
+            <div class="home-icon">🏠</div>
+            <p class="empty-title">No bookings yet</p>
+            <p class="empty-text">
+                Start by browsing providers and book your first appointment.
+            </p>
+
+            <button class="btn primary">Find Providers</button>
+        </div>
+    </section>
+
+</main>
+
+</body>
+</html>

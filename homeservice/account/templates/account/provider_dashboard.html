@@ -1,0 +1,86 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Provider Dashboard | HomeService</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{% static 'account/css/dashboard.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">
+        <div class="logo-box">H</div>
+        <span>HomeService</span>
+    </div>
+
+    <div class="user-info">
+        <div class="user-text">
+            <strong>{{ request.user.first_name }}</strong>
+            <span>Service Provider</span>
+        </div>
+        <a href="{% url 'logout' %}" class="logout">↪</a>
+    </div>
+</header>
+
+<main class="container">
+
+    <h1>Welcome back, {{ request.user.first_name }}!</h1>
+    <p class="subtitle">
+        Manage your services, bookings, and customers.
+    </p>
+
+    <div class="actions">
+        <button class="btn primary">📋 View Requests</button>
+        <button class="btn">🛠 My Services</button>
+        <button class="btn">💬 Messages</button>
+        <button class="btn">⚙ Settings</button>
+    </div>
+
+    <section class="stats">
+        <div class="card">
+            <p class="card-title">New Requests</p>
+            <h2>0</h2>
+            <small>Pending approvals</small>
+        </div>
+
+        <div class="card">
+            <p class="card-title">Active Jobs</p>
+            <h2>0</h2>
+            <small>Ongoing work</small>
+        </div>
+
+        <div class="card">
+            <p class="card-title">Completed Jobs</p>
+            <h2>0</h2>
+            <small>Total completed</small>
+        </div>
+
+        <div class="card">
+            <p class="card-title">Messages</p>
+            <h2>0</h2>
+            <small>Unread messages</small>
+        </div>
+    </section>
+
+    <section class="bookings">
+        <h2>Your Job Requests</h2>
+
+        <div class="empty-state">
+            <div class="home-icon">🛠</div>
+            <p class="empty-title">No job requests yet</p>
+            <p class="empty-text">
+                Once customers request your services, they’ll appear here.
+            </p>
+
+            <button class="btn primary">Add Services</button>
+        </div>
+    </section>
+
+</main>
+
+</body>
+</html>

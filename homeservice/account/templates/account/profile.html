@@ -1,0 +1,158 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Profile</title>
+    <link rel="stylesheet" href="{% static 'account/css/profile.css' %}">
+    <link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet/dist/leaflet.css"
+/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body>
+
+<div class="profile-container">
+
+    <!-- TOP PROFILE CARD -->
+    <div class="profile-card">
+        <div class="profile-header">
+            <div class="avatar"></div>
+
+            <div class="profile-info">
+                <h2>{{ user.get_full_name }}</h2>
+                <p class="joined">
+                    Member since {{ user.date_joined|date:"F Y" }}
+                </p>
+                <a href="#" class="edit-btn">Edit Profile</a>
+            </div>
+        </div>
+
+        <div class="profile-details">
+    <div class="detail-box">
+        <span>Email</span>
+        <p>{{ user.email }}</p>
+    </div>
+
+    <!-- LOCATION SECTION -->
+    <div class="detail-box">
+        <span>Location</span>
+
+        <p>
+            {{ profile.location|default:"Location not set" }}
+        </p>
+
+        <button class="edit-btn" onclick="openMap()">
+            Set / Update Location
+        </button>
+    </div>
+</div>
+
+<!-- MAP CONTAINER (HIDDEN BY DEFAULT) -->
+<div id="map-wrapper" style="display:none; margin-top:20px;">
+    <div id="map" style="height:300px; border-radius:12px;"></div>
+    <button class="edit-btn" style="margin-top:10px;" onclick="saveLocation()">
+        Save Location
+    </button>
+</div>
+
+    </div>
+
+    <!-- STATS SECTION -->
+    <div class="stats-section">
+        <div class="stat-box">
+            <h3>12</h3>
+            <p>Total Bookings</p>
+        </div>
+
+        <div class="stat-box">
+            <h3>3</h3>
+            <p>Active Services</p>
+        </div>
+
+    </div>
+
+    <!-- PROVIDER INFO -->
+    {% if profile.role == "provider" %}
+    <div class="provider-card">
+        <h3>Service Provider Details</h3>
+
+        <p>
+            <strong>Status:</strong>
+            {% if profile.is_verified %}
+                <span class="verified">Verified</span>
+            {% else %}
+                <span class="not-verified">Pending Verification</span>
+            {% endif %}
+        </p>
+
+        {% if profile.certificate %}
+        <p>
+            <strong>Certificate:</strong>
+            <a href="{{ profile.certificate.url }}" target="_blank">
+                View Certificate
+            </a>
+        </p>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- ACCOUNT SETTINGS -->
+    <div class="settings-card">
+        <h3>Account Settings</h3>
+
+        
+        <a href="#" class="setting-item">Notifications</a>
+        <a href="#" class="setting-item">Account Settings</a>
+    </div>
+
+    <!-- LOGOUT -->
+    <div class="logout-box">
+        <a href="{% url 'logout' %}" class="logout-btn">Sign Out</a>
+    </div>
+
+</div>
+
+</body>
+<script>
+let map, marker;
+
+function openMap() {
+    document.getElementById("map-modal").style.display = "block";
+
+    map = L.map('map').setView([27.7172, 85.3240], 13); // Kathmandu default
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    map.on('click', function(e) {
+        if (marker) map.removeLayer(marker);
+        marker = L.marker(e.latlng).addTo(map);
+        window.selectedLatLng = e.latlng;
+    });
+}
+
+function saveLocation() {
+    if (!window.selectedLatLng) {
+        alert("Please select a location");
+        return;
+    }
+
+    fetch("{% url 'save_location' %}", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            lat: window.selectedLatLng.lat,
+            lng: window.selectedLatLng.lng
+        })
+    }).then(() => location.reload());
+}
+</script>
+
+
+</html>
