@@ -1,0 +1,144 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Services | HomeService</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Dashboard CSS -->
+    <link rel="stylesheet" href="{% static 'account/css/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'booking/css/provider_services.css' %}">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">
+        <div class="logo-box">H</div>
+        <span>HomeService</span>
+    </div>
+
+    <div class="user-info">
+        <strong>{{ request.user.first_name }}</strong>
+        <a href="{% url 'logout' %}" class="logout">↪</a>
+    </div>
+</header>
+
+<main class="container">
+
+    <!-- ===== HEADER ===== -->
+    <div class="services-header">
+        <div>
+            <h1>My Services</h1>
+            <p class="subtitle">Everything you currently offer</p>
+        </div>
+
+        <div class="header-actions">
+            <a href="{% url 'provider_dashboard' %}" class="btn secondary">
+                ← Back to Dashboard
+            </a>
+
+            <a href="{% url 'add_service' %}" class="btn primary">
+                + Add Service
+            </a>
+        </div>
+    </div>
+
+    <!-- ===== STATS ===== -->
+    <section class="stats-row">
+        <div class="stat-card">
+            <h3>{{ services|length }}</h3>
+            <span>Total Services</span>
+        </div>
+
+        <div class="stat-card">
+            <h3>Active</h3>
+            <span>Status</span>
+        </div>
+
+        <div class="stat-card">
+            <h3>
+                Rs {% if services %}{{ services.first.price|floatformat:0 }}{% else %}0{% endif %}
+            </h3>
+            <span>Starting Price</span>
+        </div>
+    </section>
+
+    <!-- ===== SERVICES GRID ===== -->
+    <div class="services-grid">
+
+        {% for service in services %}
+            <div class="service-card">
+
+                <h3>{{ service.name }}</h3>
+
+                <p class="meta">
+                    {{ service.category|title }} • {{ service.location }}
+                </p>
+
+                <p class="price">Rs {{ service.price|floatformat:0 }}</p>
+
+                <p class="description">
+                    {{ service.description|truncatechars:80 }}
+                </p>
+
+                <div class="card-actions">
+                    <a href="{% url 'edit_service' service.id %}" class="btn small primary">
+                        Edit
+                    </a>
+
+                    <!-- ✅ DELETE BUTTON (CORRECT PLACE) -->
+                    <button
+                        class="btn small danger"
+                        onclick="openDeleteModal('{% url 'delete_service' service.id %}')">
+                        Delete
+                    </button>
+                </div>
+
+            </div>
+        {% empty %}
+            <div class="empty-state">
+                <p>No services added yet.</p>
+                <a href="{% url 'add_service' %}" class="btn primary">
+                    Add your first service
+                </a>
+            </div>
+        {% endfor %}
+
+    </div>
+
+</main>
+
+<!-- ===== DELETE MODAL (ONLY ONCE) ===== -->
+<div id="deleteModal" class="modal-overlay">
+    <div class="modal-box">
+        <h3>Delete Service</h3>
+        <p>This action cannot be undone.</p>
+
+        <form id="deleteForm" method="post">
+            {% csrf_token %}
+            <div class="modal-actions">
+                <button type="button" class="btn secondary" onclick="closeModal()">
+                    Cancel
+                </button>
+                <button type="submit" class="btn danger">
+                    Delete
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function openDeleteModal(url) {
+    document.getElementById("deleteModal").style.display = "flex";
+    document.getElementById("deleteForm").action = url;
+}
+
+function closeModal() {
+    document.getElementById("deleteModal").style.display = "none";
+}
+</script>
+
+</body>
+</html>

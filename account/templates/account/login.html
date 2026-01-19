@@ -1,0 +1,101 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login | HomeService</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{% static 'account/css/login.css' %}">
+
+    <!-- FONT -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="login-wrapper">
+
+  <!-- LEFT -->
+  <div class="login-left">
+
+    <div class="brand">
+      <div class="logo-box">H</div>
+      <span>HomeService</span>
+    </div>
+
+    <h1>Welcome back</h1>
+    <p class="subtitle">Log in to your account to continue</p>
+
+    <form class="login-form" method="post">
+      {% csrf_token %}
+
+      <!-- EMAIL -->
+      <label>Email</label>
+      <div class="input-group">
+        <span class="icon">✉️</span>
+        <input type="email" name="username" placeholder="Enter your email" required>
+
+      </div>
+
+      <!-- PASSWORD HEADER -->
+      <div class="password-header">
+        <label>Password</label>
+        <a href="#" class="forgot">Forgot password?</a>
+      </div>
+
+      <!-- PASSWORD -->
+      <div class="input-group">
+        <span class="icon">🔒</span>
+        <input
+          type="password"
+          id="loginPassword"
+          name="password"
+          placeholder="Enter your password"
+          required
+        >
+        <span class="eye" onclick="toggleLoginPassword()">👁</span>
+      </div>
+
+      <!-- SUBMIT -->
+      <button type="submit" class="login-btn">
+        Log In →
+      </button>
+
+      <!-- SIGNUP -->
+      <p class="signup">
+        Don't have an account?
+        <a href="{% url 'register' %}">Sign up</a>
+      </p>
+
+    </form>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="login-right">
+    <div class="right-content">
+      <div class="logo-large">H</div>
+      <h2>Quality Service at Your Fingertips</h2>
+      <p>
+        Book trusted home service professionals, track your bookings,
+        and get things done with ease.
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<!-- PASSWORD TOGGLE SCRIPT -->
+<script>
+function toggleLoginPassword() {
+    const passwordInput = document.getElementById("loginPassword");
+
+    if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+    } else {
+        passwordInput.type = "password";
+    }
+}
+</script>
+
+</body>
+</html>

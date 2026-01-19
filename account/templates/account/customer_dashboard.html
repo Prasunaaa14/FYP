@@ -1,0 +1,184 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Dashboard | HomeService</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{% static 'account/css/dashboard.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar">
+    <div class="nav-left">
+        <div class="logo-box">H</div>
+        <span class="brand">HomeService</span>
+    </div>
+<a href="{% url 'profile' %}" class="profile-link"> 
+    <div class="nav-right">
+        <div class="user-avatar">
+    👤
+</div>
+<div class="user-text">
+        <strong>{{ request.user.first_name }}</strong>
+        <span>Customer</span>
+    </div>
+</a>
+
+        <a href="{% url 'logout' %}" class="logout-btn" title="Logout">
+            ↪
+        </a>
+    </div>
+</header>
+
+
+<!-- MAIN CONTENT -->
+<main class="container">
+
+    <h1>Welcome back, {{ request.user.first_name }}!</h1>
+    <p class="subtitle">
+        Manage your bookings and find trusted service providers.
+    </p>
+
+    <!-- ACTION BUTTONS -->
+    <!-- ACTION BUTTONS -->
+<div class="actions">
+
+    <!-- Find Providers → goes to browse services -->
+    <a class="btn primary" href="{% url 'browse_services' %}">
+        🔍 Find Providers
+    </a>
+
+    <!-- Browse Services -->
+    <a class="btn" href="{% url 'browse_services' %}">
+        🏠 Browse Services
+    </a>
+
+    <!-- Messages (placeholder for now) -->
+    <a class="btn" href="#">
+        💬 Messages
+    </a>
+
+</div>
+
+
+    <!-- STATS -->
+    <section class="stats">
+        <div class="card">
+            <p class="card-title">Active Bookings</p>
+            <h2>0</h2>
+            <small>No active bookings</small>
+        </div>
+
+        <div class="card">
+            <p class="card-title">Completed</p>
+            <h2>0</h2>
+            <small>Total completed</small>
+        </div>
+
+        <div class="card">
+            <p class="card-title">Reviews Given</p>
+            <h2>0</h2>
+            <small>Help others decide</small>
+        </div>
+
+        <div class="card">
+            <p class="card-title">Messages</p>
+            <h2>0</h2>
+            <small>Unread messages</small>
+        </div>
+    </section>
+
+    <!-- BOOKINGS -->
+    <section class="bookings">
+        <h2>Your Bookings</h2>
+
+        {% if bookings %}
+        <div class="bookings-list">
+            {% for booking in bookings %}
+            {% if booking.status != "cancelled" %}
+            <div class="booking-card">
+                <!-- Card Header with Service Icon -->
+                <div class="card-top">
+                    <div class="service-icon">🔧</div>
+                    <div class="card-title-section">
+                        <h3 class="service-name">{{ booking.service.name }}</h3>
+                        <span class="category-badge">{{ booking.service.get_category_display }}</span>
+                    </div>
+                    <span class="status status-{{ booking.status }}">{{ booking.get_status_display }}</span>
+                </div>
+
+                <!-- Provider Info -->
+                <div class="provider-info">
+                    <div class="provider-avatar">👨‍💼</div>
+                    <div class="provider-details">
+                        <p class="provider-label">Service Provider 
+                            {% if booking.service.provider.is_verified %}
+                            <span class="verified-badge-inline">✓ Verified</span>
+                            {% endif %}
+                        </p>
+                        <p class="provider-name">{{ booking.service.provider.user.get_full_name }}</p>
+                    </div>
+                </div>
+
+                <!-- Booking Info Grid -->
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">💰 Price</span>
+                        <span class="info-value">Rs. {{ booking.service.price }}</span>
+                    </div>
+                    {% if booking.booking_time %}
+                    <div class="info-item">
+                        <span class="info-label">⏰ Time</span>
+                        <span class="info-value">{{ booking.booking_time }}</span>
+                    </div>
+                    {% endif %}
+                    {% if booking.location %}
+                    <div class="info-item">
+                        <span class="info-label">📍 Location</span>
+                        <span class="info-value">{{ booking.location }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Booking Date -->
+                <div class="booking-date">
+                    <span>📅 Booked on {{ booking.created_at|date:"M d, Y" }} at {{ booking.created_at|time:"H:i" }}</span>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="card-actions">
+                    <a href="{% url 'view_messages' booking.id %}" class="btn-secondary" style="text-decoration: none; text-align: center;">💬 Message Provider</a>
+                    {% if booking.status == "pending" %}
+                    <form method="POST" action="{% url 'cancel_booking' booking.id %}" style="flex: 1;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-cancel" onclick="return confirm('Are you sure you want to cancel this booking?');">❌ Cancel Booking</button>
+                    </form>
+                    {% else %}
+                    <button class="btn-secondary">📞 Contact</button>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="home-icon">🏠</div>
+            <p class="empty-title">No bookings yet</p>
+            <p class="empty-text">
+                Start by browsing providers and book your first appointment.
+            </p>
+
+            <a href="{% url 'browse_services' %}" class="btn primary">Find Providers</a>
+        </div>
+        {% endif %}
+    </section>
+
+</main>
+
+</body>
+</html>

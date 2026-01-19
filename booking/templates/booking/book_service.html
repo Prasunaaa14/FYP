@@ -1,0 +1,88 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Service | HomeService</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{% static 'booking/css/booking.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar">
+    <div class="logo">
+        <div class="logo-box">H</div>
+        <span>HomeService</span>
+    </div>
+
+    <a href="{% url 'customer_dashboard' %}" class="back-link">
+        ← Back to Dashboard
+    </a>
+</header>
+
+<!-- MAIN -->
+<main class="booking-container">
+
+    <h1>Book a Service</h1>
+    <p class="subtitle">
+        Confirm your booking details below
+    </p>
+
+    <!-- PROVIDER CARD -->
+    <div class="provider-card">
+        <div class="provider-avatar"></div>
+
+        <div class="provider-info">
+            <lable> Name:</lable>
+            <input type="text" value="{{ service.provider.user.first_name }} {{ service.provider.user.last_name }}" readonly>
+            <lable> Email:</lable>
+            <input type="text" value="{{ service.provider.user.email }}" readonly>
+            <p>{{ service.get_category_display }}</p>
+            {% if service.provider.is_verified %}
+            <span class="verified">✓ Verified Provider</span>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- BOOKING FORM -->
+    <form class="booking-form" method="post">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label>Service Date</label>
+            <input type="date" required>
+        </div>
+    
+    <div class="form-group">    
+        <label>Service Location</label>
+    <input
+        type="text"
+        name="location"
+        placeholder="Enter service location (e.g. Kathmandu, Baneshwor)"
+        required
+    >
+</div>
+
+
+
+        <div class="form-group">
+            <label>Preferred Time</label>
+            <input type="time" required>
+        </div>
+
+        <div class="form-group">
+            <label>Additional Notes</label>
+            <textarea placeholder="Describe your issue (optional)"></textarea>
+        </div>
+
+        <button type="submit" class="confirm-btn">
+            Confirm Booking
+        </button>
+    </form>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ provider.user.first_name }} | Profile</title>
+    <style>
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>
+    {{ provider.user.first_name }}
+    {% if provider.is_verified %}
+    <span class="verified-badge">✓ Verified Provider</span>
+    {% endif %}
+</h1>
+<p>Location: {{ provider.location }}</p>
+<p>Verified Skill: {{ provider.verified_category|title }}</p>
+
+<h2>Services Offered</h2>
+
+{% for service in services %}
+    <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+        <h3>{{ service.name }}</h3>
+        <p>{{ service.description }}</p>
+        <p>Price: Rs {{ service.price }}</p>
+
+        <a href="{% url 'book_service' service.id %}">
+            Book This Service
+        </a>
+    </div>
+{% empty %}
+    <p>No services available.</p>
+{% endfor %}
+
+</body>
+</html>

@@ -1,0 +1,112 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Messages | HomeService</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'booking/css/messages.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar">
+    <div class="nav-left">
+        <div class="logo-box">H</div>
+        <span class="brand">HomeService</span>
+    </div>
+    
+    <a href="{% if is_customer %}{% url 'customer_dashboard' %}{% else %}{% url 'provider_dashboard' %}{% endif %}" class="back-link">
+        ← Back to Dashboard
+    </a>
+</header>
+
+<!-- MAIN CONTENT -->
+<main class="container">
+    
+    <!-- BOOKING INFO CARD -->
+    <div class="booking-info-card">
+        <div class="booking-header">
+            <h2>💬 Conversation</h2>
+            <span class="status status-{{ booking.status }}">{{ booking.get_status_display }}</span>
+        </div>
+        
+        <div class="booking-details">
+            <div class="detail-item">
+                <strong>Service:</strong> {{ booking.service.name }}
+            </div>
+            <div class="detail-item">
+                <strong>{% if is_customer %}Provider{% else %}Customer{% endif %}:</strong>
+                {% if is_customer %}
+                    {{ booking.service.provider.user.get_full_name }}
+                {% else %}
+                    {{ booking.customer.get_full_name }}
+                {% endif %}
+            </div>
+            <div class="detail-item">
+                <strong>Location:</strong> {{ booking.location }}
+            </div>
+            <div class="detail-item">
+                <strong>Booking Date:</strong> {{ booking.created_at|date:"M d, Y - H:i" }}
+            </div>
+        </div>
+    </div>
+
+    <!-- MESSAGES CONTAINER -->
+    <div class="messages-container">
+        <div class="messages-list" id="messagesList">
+            {% for message in conversation %}
+            <div class="message {% if message.sender == request.user %}sent{% else %}received{% endif %}">
+                <div class="message-header">
+                    <span class="sender-name">
+                        {% if message.sender == request.user %}
+                            You
+                        {% else %}
+                            {{ message.sender.get_full_name }}
+                        {% endif %}
+                    </span>
+                    <span class="message-time">{{ message.created_at|date:"M d, H:i" }}</span>
+                </div>
+                <div class="message-content">
+                    {{ message.content }}
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-messages">
+                <p>📭 No messages yet</p>
+                <small>Start the conversation by sending a message below</small>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- MESSAGE INPUT FORM -->
+        <form method="POST" class="message-form">
+            {% csrf_token %}
+            <div class="input-group">
+                <textarea 
+                    name="content" 
+                    placeholder="Type your message here..."
+                    rows="3"
+                    required
+                    maxlength="1000"
+                ></textarea>
+                <button type="submit" class="send-btn">
+                    📤 Send Message
+                </button>
+            </div>
+        </form>
+    </div>
+
+</main>
+
+<script>
+    // Auto-scroll to bottom of messages
+    const messagesList = document.getElementById('messagesList');
+    if (messagesList) {
+        messagesList.scrollTop = messagesList.scrollHeight;
+    }
+</script>
+
+</body>
+</html>

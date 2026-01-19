@@ -1,0 +1,179 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Service | HomeService</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Reuse dashboard styling -->
+    <link rel="stylesheet" href="{% static 'account/css/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'booking/css/provider_services.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        .edit-wrapper {
+            max-width: 900px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 14px;
+            padding: 32px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+        }
+
+        .edit-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+        }
+
+        .edit-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            background: #f1f5f9;
+            color: #111827;
+            font-weight: 500;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full {
+            grid-column: span 2;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        input, textarea {
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+            font-size: 15px;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-actions {
+            margin-top: 30px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .btn-primary {
+            background: #eb8525ff;
+            color: white;
+            border: none;
+            padding: 12px 22px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-secondary {
+            background: #e5e7eb;
+            color: #111827;
+            border: none;
+            padding: 12px 22px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ===== TOP NAVBAR (same as dashboard) ===== -->
+<header class="navbar">
+    <div class="logo">
+        <div class="logo-box">H</div>
+        <span>HomeService</span>
+    </div>
+
+    <div class="user-info">
+        <div class="user-text">
+            <strong>{{ request.user.first_name }}</strong>
+            <span>Service Provider</span>
+        </div>
+        <a href="{% url 'logout' %}" class="logout">↪</a>
+    </div>
+</header>
+
+<main class="container">
+
+    <div class="edit-wrapper">
+
+        <div class="edit-header">
+            <h2>Edit Service – {{ service.name }}</h2>
+            <a href="{% url 'provider_services' %}" class="back-btn">← Back</a>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Service Name</label>
+                    <input type="text" name="name" value="{{ service.name }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Price (Rs)</label>
+                    <input type="number" name="price" value="{{ service.price }}" required>
+                </div>
+
+                <div class="form-group full">
+                    <label>Description</label>
+                    <textarea name="description" required>{{ service.description }}</textarea>
+                </div>
+
+                <div class="form-group full">
+                    <label>Service Location</label>
+                    <input type="text" name="location" value="{{ service.location }}">
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+                <a href="{% url 'provider_services' %}" class="btn-secondary">Cancel</a>
+                <button type="submit" class="btn-primary">Update Service</button>
+            </div>
+
+        </form>
+
+    </div>
+
+</main>
+
+</body>
+</html>
