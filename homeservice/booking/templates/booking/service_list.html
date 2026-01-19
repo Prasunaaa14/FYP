@@ -1,0 +1,20 @@
+<form method="GET">
+    <input type="text" name="location" placeholder="Search by location">
+    <button type="submit">Search</button>
+</form>
+
+<hr>
+
+{% for service in services %}
+    <div>
+        <h3>{{ service.name }}</h3>
+        <p>{{ service.description }}</p>
+        <p><strong>Location:</strong> {{ service.location }}</p>
+
+        <a href="{% url 'book_service' service.id %}">
+            Book Service
+        </a>
+    </div>
+{% empty %}
+    <p>No services found for this location.</p>
+{% endfor %}
