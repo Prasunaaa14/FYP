@@ -68,17 +68,28 @@
         <input type="tel" name="phone" placeholder="Enter your phone number" required>
       </div>
 
-      <!-- SERVICE CATEGORY -->
-      <label>Service Category</label>
-      <select class="select-box" name="service_category" required>
-        <option value="">Select your service</option>
-        <option>Plumbing</option>
-        <option>Electrical</option>
-        <option>Cleaning</option>
-        <option>Carpentry</option>
-        <option>Painting</option>
-        <option>AC Repair</option>
-      </select>
+      <!-- SERVICE CATEGORIES -->
+      <label>Service Categories (Select One or More)</label>
+      <div class="checkbox-group">
+        <label class="checkbox-label">
+          <input type="checkbox" name="service_categories" value="plumbing"> Plumbing
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" name="service_categories" value="electrical"> Electrical
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" name="service_categories" value="cleaning"> Cleaning
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" name="service_categories" value="carpentry"> Carpentry
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" name="service_categories" value="painting"> Painting
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" name="service_categories" value="ac_repair"> AC Repair
+        </label>
+      </div>
 
       <!-- EXPERIENCE -->
       <label>Experience (Years)</label>
@@ -87,11 +98,11 @@
         <input type="number" name="experience" min="0" placeholder="e.g. 3" required>
       </div>
 
-      <!-- CERTIFICATE -->
-      <label>Upload Certificate</label>
+      <!-- CERTIFICATES -->
+      <label>Upload Certificates (One or More)</label>
       <div class="file-upload">
-        <input type="file" name="certificate" accept=".pdf,.jpg,.jpeg,.png" required>
-        <small>Accepted formats: PDF, JPG, PNG</small>
+        <input type="file" name="certificates" accept=".pdf,.jpg,.jpeg,.png" multiple required>
+        <small>Accepted formats: PDF, JPG, PNG. You can select multiple files.</small>
       </div>
 
       <!-- PASSWORD -->

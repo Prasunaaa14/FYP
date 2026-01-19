@@ -1,0 +1,232 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Messages | HomeService</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'booking/css/messages.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .inbox-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .inbox-header {
+            margin-bottom: 30px;
+        }
+
+        .inbox-header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+
+        .inbox-header p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .conversations-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .conversation-item {
+            display: block;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .conversation-item:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-color: #f97316;
+            transform: translateX(4px);
+        }
+
+        .conversation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .conversation-title {
+            font-weight: 600;
+            color: #0f172a;
+            font-size: 15px;
+        }
+
+        .conversation-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .unread-badge {
+            display: inline-block;
+            background: #f97316;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .conversation-body {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .conversation-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+        }
+
+        .conversation-detail {
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        .last-message {
+            font-size: 13px;
+            color: #94a3b8;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #f1f5f9;
+            font-style: italic;
+        }
+
+        .conversation-time {
+            font-size: 12px;
+            color: #94a3b8;
+            white-space: nowrap;
+            margin-left: 16px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 2px dashed #e2e8f0;
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .empty-state h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            color: #64748b;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar">
+    <div class="nav-left">
+        <div class="logo-box">H</div>
+        <span class="brand">HomeService</span>
+    </div>
+    
+    <a href="{% url 'customer_dashboard' %}" class="back-link">
+        ← Back to Dashboard
+    </a>
+</header>
+
+<!-- MAIN CONTENT -->
+<main class="inbox-container">
+    
+    <div class="inbox-header">
+        <h1>💬 Messages</h1>
+        <p>View and manage all your conversations</p>
+    </div>
+
+    {% if conversations %}
+        <div class="conversations-list">
+            {% for item in conversations %}
+            <a href="{% url 'view_messages' item.booking.id %}" class="conversation-item">
+                <div class="conversation-header">
+                    <span class="conversation-title">
+                        {{ item.booking.service.name }}
+                        {% if item.booking.status == "approved" %}
+                            <span class="status-badge">{{ item.booking.get_status_display }}</span>
+                        {% endif %}
+                    </span>
+                    {% if item.unread_count > 0 %}
+                        <span class="unread-badge">{{ item.unread_count }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="conversation-body">
+                    <div class="conversation-meta">
+                        <span class="conversation-detail">
+                            <strong>Provider:</strong> {{ item.booking.service.provider.user.get_full_name }}
+                        </span>
+                        <span class="conversation-detail">
+                            <strong>Location:</strong> {{ item.booking.location }}
+                        </span>
+                        {% if item.last_message %}
+                            <span class="last-message">
+                                "{{ item.last_message.content|truncatewords:15 }}"
+                            </span>
+                        {% else %}
+                            <span class="last-message">No messages yet</span>
+                        {% endif %}
+                    </div>
+                    {% if item.last_message %}
+                        <span class="conversation-time">{{ item.last_message.created_at|date:"M d, H:i" }}</span>
+                    {% endif %}
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">📭</div>
+            <h2>No Messages Yet</h2>
+            <p>Start by booking a service to begin conversations with providers.</p>
+        </div>
+    {% endif %}
+
+</main>
+
+</body>
+</html>

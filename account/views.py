@@ -59,13 +59,13 @@ def provider_register(request):
         email = request.POST.get("email")
         phone = request.POST.get("phone")
         password = request.POST.get("password")
-        service_category = request.POST.get("service_category")
         experience = request.POST.get("experience")
-        certificate = request.FILES.get("certificate")
+        service_categories = request.POST.getlist("service_categories")  # Multiple categories
+        certificates = request.FILES.getlist("certificates")  # Multiple certificates
 
         if not all([
             full_name, email, phone, password,
-            service_category, experience, certificate
+            service_categories, experience, certificates
         ]):
             messages.error(request, "All fields are required.")
             return redirect("provider_register")
@@ -74,6 +74,7 @@ def provider_register(request):
             messages.error(request, "Email already registered.")
             return redirect("provider_register")
 
+        # Create user
         user = User.objects.create_user(
             username=email,
             email=email,
@@ -83,13 +84,30 @@ def provider_register(request):
 
         verification_token = get_random_string(32)
 
-        Profile.objects.create(
+        # Create profile
+        profile = Profile.objects.create(
             user=user,
             role="provider",
-            certificate=certificate,
             is_verified=False,
             email_token=verification_token
         )
+
+        # Add selected categories
+        from account.models import ProviderCategory
+        for category in service_categories:
+            ProviderCategory.objects.create(
+                provider=profile,
+                category=category,
+                is_verified=False
+            )
+
+        # Add certificates
+        from account.models import ProviderCertificate
+        for certificate in certificates:
+            ProviderCertificate.objects.create(
+                provider=profile,
+                certificate=certificate
+            )
 
         verification_link = f"http://127.0.0.1:8000/account/verify-email/{verification_token}/"
 

@@ -269,6 +269,42 @@ def provider_profile(request, provider_id):
 
 
 # =====================================================
+# MESSAGING: INBOX (ALL CONVERSATIONS)
+# =====================================================
+@login_required
+def messages_inbox(request):
+    # Get all bookings for the current user
+    if hasattr(request.user, 'profile') and request.user.profile.role == 'provider':
+        # Provider: show bookings where they are the service provider
+        bookings = Booking.objects.filter(
+            service__provider=request.user.profile
+        ).order_by('-booking_date').distinct()
+    else:
+        # Customer: show their bookings
+        bookings = Booking.objects.filter(
+            customer=request.user
+        ).order_by('-booking_date')
+    
+    # Add last message info to each booking
+    conversations = []
+    for booking in bookings:
+        last_message = booking.messages.last()
+        unread_count = booking.messages.filter(
+            is_read=False
+        ).exclude(sender=request.user).count()
+        
+        conversations.append({
+            'booking': booking,
+            'last_message': last_message,
+            'unread_count': unread_count,
+        })
+    
+    return render(request, "booking/messages_inbox.html", {
+        "conversations": conversations,
+    })
+
+
+# =====================================================
 # MESSAGING: VIEW CONVERSATION
 # =====================================================
 @login_required

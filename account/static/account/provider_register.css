@@ -153,6 +153,46 @@ font-weight: 800;
   margin-top: 6px;
 }
 
+/* CHECKBOX GROUP */
+.checkbox-group {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+  margin-top: 8px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 500;
+  color: #0f172a;
+  transition: all 0.2s ease;
+}
+
+.checkbox-label:hover {
+  background: #f1f5f9;
+  border-color: #f97316;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #f97316;
+}
+
+.checkbox-label input[type="checkbox"]:checked + label,
+.checkbox-label input[type="checkbox"]:checked {
+  accent-color: #f97316;
+}
+
 /* BUTTON */
 .submit-btn {
   width: 100%;
