@@ -37,8 +37,8 @@
     {% if messages %}
       <div class="messages">
         {% for message in messages %}
-          <div class="alert alert-{{ message.tags }}">
-            {{ message }}
+          <div class="alert alert-{{ message.tags }} alert-box">
+            <strong>⚠️ {{ message }}</strong>
           </div>
         {% endfor %}
       </div>
@@ -51,22 +51,36 @@
       <label>Full Name</label>
       <div class="input-group">
         <span>👤</span>
-        <input type="text" name="full_name" placeholder="Enter your full name" required>
+        <input type="text" name="full_name" placeholder="Enter your full name" value="{{ request.POST.full_name }}" required>
       </div>
 
       <!-- EMAIL -->
       <label>Email</label>
       <div class="input-group">
         <span>✉️</span>
-        <input type="email" name="email" placeholder="Enter your email" required>
+        <input type="email" name="email" placeholder="Enter your email" value="{{ request.POST.email }}" required>
       </div>
+      {% if form.email.errors %}
+        <div class="field-error">
+          {% for error in form.email.errors %}
+            <small style="color: #dc2626;">{{ error }}</small>
+          {% endfor %}
+        </div>
+      {% endif %}
 
       <!-- PHONE -->
       <label>Phone Number</label>
       <div class="input-group">
         <span>📞</span>
-        <input type="tel" name="phone" placeholder="Enter your phone number" required>
+        <input type="tel" name="phone" placeholder="Enter your phone number" value="{{ request.POST.phone }}" required>
       </div>
+      {% if form.phone.errors %}
+        <div class="field-error">
+          {% for error in form.phone.errors %}
+            <small style="color: #dc2626;">{{ error }}</small>
+          {% endfor %}
+        </div>
+      {% endif %}
 
       <!-- SERVICE CATEGORIES -->
       <label>Service Categories (Select One or More)</label>
@@ -90,6 +104,9 @@
           <input type="checkbox" name="service_categories" value="ac_repair"> AC Repair
         </label>
       </div>
+      <small style="color: #f97316; font-size: 12px; display: block; margin-bottom: 16px; font-weight: 500;">
+        ⚠️ Important: Upload one certificate for each category you select (e.g., 2 categories = 2 certificates)
+      </small>
 
       <!-- EXPERIENCE -->
       <label>Experience (Years)</label>
@@ -99,10 +116,20 @@
       </div>
 
       <!-- CERTIFICATES -->
-      <label>Upload Certificates (One or More)</label>
+      <label>Upload Certificates (One for Each Category)</label>
       <div class="file-upload">
-        <input type="file" name="certificates" accept=".pdf,.jpg,.jpeg,.png" multiple required>
-        <small>Accepted formats: PDF, JPG, PNG. You can select multiple files.</small>
+        <input
+          type="file"
+          id="certificateInput"
+          name="certificates"
+          accept=".pdf,.jpg,.jpeg,.png"
+          multiple="multiple"
+          required
+        >
+        <small>
+          Accepted formats: PDF, JPG, PNG. You can add files in multiple picks—we'll keep them all here (Ctrl/Shift/⌘ lets you multi-select in one pick).
+        </small>
+        <div id="fileList" style="margin-top: 10px; font-size: 13px; color: #059669;"></div>
       </div>
 
       <!-- PASSWORD -->
@@ -113,11 +140,42 @@
           type="password"
           id="providerPassword"
           name="password"
-          placeholder="Create a password"
+          placeholder="Create a password (min 8 characters)"
           required
         >
         <span class="eye-icon" onclick="togglePassword()">👁</span>
       </div>
+      {% if form.password.errors %}
+        <div class="field-error">
+          {% for error in form.password.errors %}
+            <small style="color: #dc2626;">{{ error }}</small>
+          {% endfor %}
+        </div>
+      {% endif %}
+      <small style="color: #64748b; font-size: 12px; margin-top: -12px; display: block; margin-bottom: 16px;">
+        Must include: uppercase, lowercase, number, and special character
+      </small>
+
+      <!-- CONFIRM PASSWORD -->
+      <label>Confirm Password</label>
+      <div class="input-group">
+        <span>🔒</span>
+        <input
+          type="password"
+          id="confirmProviderPassword"
+          name="confirm_password"
+          placeholder="Re-enter your password"
+          required
+        >
+        <span class="eye-icon" onclick="toggleConfirmPassword()">👁</span>
+      </div>
+      {% if form.confirm_password.errors %}
+        <div class="field-error">
+          {% for error in form.confirm_password.errors %}
+            <small style="color: #dc2626;">{{ error }}</small>
+          {% endfor %}
+        </div>
+      {% endif %}
 
       <!-- SUBMIT -->
       <button type="submit" class="submit-btn">
@@ -151,6 +209,64 @@ function togglePassword() {
         passwordInput.type = "password";
     }
 }
+
+function toggleConfirmPassword() {
+    const confirmInput = document.getElementById("confirmProviderPassword");
+
+    if (confirmInput.type === "password") {
+        confirmInput.type = "text";
+    } else {
+        confirmInput.type = "password";
+    }
+}
+
+// Allow multiple file picks and accumulate selections
+document.addEventListener('DOMContentLoaded', function() {
+  const fileInput = document.getElementById('certificateInput');
+  const fileList = document.getElementById('fileList');
+  if (!fileInput || !fileList) return;
+
+  const dt = new DataTransfer(); // holds all selected files across picks
+
+  function renderFiles() {
+    const files = dt.files;
+    if (!files.length) {
+      fileList.innerHTML = '';
+      return;
+    }
+
+    let fileNames = '<strong>✅ Selected files (' + files.length + '):</strong><br>';
+    Array.from(files).forEach((file, idx) => {
+      fileNames += '📄 ' + (idx + 1) + '. ' + file.name + '<br>';
+    });
+    fileList.innerHTML = fileNames;
+  }
+
+  fileInput.addEventListener('change', function(e) {
+    const newFiles = e.target.files;
+    if (!newFiles || !newFiles.length) return;
+
+    Array.from(newFiles).forEach(file => {
+      const exists = Array.from(dt.files).some(f => (
+        f.name === file.name &&
+        f.size === file.size &&
+        f.lastModified === file.lastModified
+      ));
+      if (!exists) {
+        dt.items.add(file);
+      }
+    });
+
+    // Update the actual input's FileList and refresh UI
+    fileInput.files = dt.files;
+    renderFiles();
+  });
+
+  // Ensure accumulated files are present on submit
+  fileInput.form?.addEventListener('submit', function() {
+    fileInput.files = dt.files;
+  });
+});
 </script>
 
 </body>

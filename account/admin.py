@@ -30,7 +30,7 @@ class ProfileAdmin(admin.ModelAdmin):
         """
         if obj and obj.role == 'customer':
             return ('user', 'role')
-        return ('user', 'role', 'certificate', 'is_verified')
+        return ('user', 'role', 'is_verified', 'phone', 'location', 'verified_categories')
 
     def save_model(self, request, obj, form, change):
         """
@@ -52,7 +52,7 @@ class ProfileInline(admin.StackedInline):
     def get_fields(self, request, obj=None):
         if obj and hasattr(obj, 'profile') and obj.profile.role == 'customer':
             return ('role',)
-        return ('role', 'certificate', 'is_verified')
+        return ('role', 'is_verified')
 
 
 

@@ -28,6 +28,15 @@ class Profile(models.Model):
         max_length=20,
     )
     
+    # Phone number
+    phone = models.CharField(
+        max_length=15,
+        null=True,
+        blank=True,
+        unique=True,
+        help_text="User's phone number"
+    )
+    
     # Multiple categories as comma-separated string or use separate model
     verified_categories = models.CharField(
         max_length=255,

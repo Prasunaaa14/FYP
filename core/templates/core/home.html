@@ -86,74 +86,75 @@
 </section>
 
 <!-- SERVICES -->
-<section class="services-section">
-  <div class="services-grid">
+   <a href="{% url 'service_categories' %}" class="view-all">
+    View All Services →
+  </a>
+<div class="services-grid">
 
+  <a href="{% url 'providers_by_category' 'plumbing' %}" class="service-link">
     <div class="service-card active">
-      <div class="icon-box blue">
-        💧
-      </div>
+      <div class="icon-box blue">💧</div>
       <h3>Plumbing</h3>
       <p>Leaks, repairs, installations & more</p>
       <span class="providers">245 providers available</span>
       <span class="arrow">→</span>
     </div>
+  </a>
 
+  <a href="{% url 'providers_by_category' 'electrical' %}" class="service-link">
     <div class="service-card">
-      <div class="icon-box yellow">
-        ⚡
-      </div>
+      <div class="icon-box yellow">⚡</div>
       <h3>Electrical</h3>
       <p>Wiring, repairs, lighting solutions</p>
       <span class="providers">189 providers available</span>
-       <span class="arrow">→</span>
+      <span class="arrow">→</span>
     </div>
+  </a>
 
+  <a href="{% url 'providers_by_category' 'cleaning' %}" class="service-link">
     <div class="service-card">
-      <div class="icon-box green">
-        ✨
-      </div>
+      <div class="icon-box green">✨</div>
       <h3>Cleaning</h3>
       <p>Deep cleaning, regular maintenance</p>
       <span class="providers">412 providers available</span>
-       <span class="arrow">→</span>
+      <span class="arrow">→</span>
     </div>
+  </a>
 
+  <a href="{% url 'providers_by_category' 'carpentry' %}" class="service-link">
     <div class="service-card">
-      <div class="icon-box orange">
-        🔨
-      </div>
+      <div class="icon-box orange">🔨</div>
       <h3>Carpentry</h3>
       <p>Furniture, repairs, custom work</p>
       <span class="providers">156 providers available</span>
-       <span class="arrow">→</span>
+      <span class="arrow">→</span>
     </div>
+  </a>
 
+  <a href="{% url 'providers_by_category' 'painting' %}" class="service-link">
     <div class="service-card">
-      <div class="icon-box purple">
-        🎨
-      </div>
+      <div class="icon-box purple">🎨</div>
       <h3>Painting</h3>
       <p>Interior, exterior, decorative</p>
       <span class="providers">198 providers available</span>
-       <span class="arrow">→</span>
+      <span class="arrow">→</span>
     </div>
+  </a>
 
+  <a href="{% url 'providers_by_category' 'ac_repair' %}" class="service-link">
     <div class="service-card">
-      <div class="icon-box cyan">
-        ❄️
-      </div>
+      <div class="icon-box cyan">❄️</div>
       <h3>AC Repair</h3>
       <p>Installation, servicing, repairs</p>
       <span class="providers">134 providers available</span>
-       <span class="arrow">→</span>
+      <span class="arrow">→</span>
     </div>
-
-  </div>
-
-  <a href="#" class="view-all">
-    View All Services →
   </a>
+
+</div>
+
+
+
 
 
 <!-- HOW IT WORKS -->

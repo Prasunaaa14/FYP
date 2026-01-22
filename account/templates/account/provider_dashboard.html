@@ -32,6 +32,14 @@
 
 <main class="container">
 
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     <h1>Welcome back, {{ request.user.first_name }}!</h1>
     <p class="subtitle">
         Manage your services, bookings, and customers.

@@ -7,6 +7,19 @@
 
     <!-- CSS LINK ADDED HERE -->
     <link rel="stylesheet" href="{% static 'booking/css/provider_by_category.css' %}">
+    <style>
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+    </style>
 </head>
 <body>
 
@@ -14,27 +27,28 @@
 
     <h2 class="page-title">{{ category }} Service Providers</h2>
 
-    {% if services %}
+    {% if providers %}
         <div class="service-grid">
-            {% for service in services %}
+            {% for provider in providers %}
                 <div class="service-card">
 
                     <div class="service-header">
-                        <h3>{{ service.name }}</h3>
-                        <span class="price">Rs {{ service.price }}</span>
+                        <h3>{{ provider.user.first_name }}</h3>
+                        {% if provider.is_verified %}
+                            <span class="verified-badge">✓ Verified</span>
+                        {% endif %}
                     </div>
 
                     <p class="description">
-                        {{ service.description }}
+                        <strong>Location:</strong> {{ provider.location|default:"Not specified" }}
                     </p>
 
                     <div class="service-meta">
-                        <p><strong>Location:</strong> {{ service.location }}</p>
-                        <p><strong>Provider:</strong> {{ service.provider.user.email }}</p>
+                        <p><strong>Email:</strong> {{ provider.user.email }}</p>
                     </div>
 
-                    <a href="{% url 'book_service' service.id %}" class="btn-book">
-                        Book Now
+                    <a href="{% url 'provider_profile' provider.id %}" class="btn-book">
+                        View Profile
                     </a>
 
                 </div>
@@ -43,6 +57,9 @@
     {% else %}
         <p class="empty-text">No providers available for this service.</p>
     {% endif %}
+
+    <br>
+    <a href="{% url 'home' %}" style="color: #1e40af; text-decoration: none; font-weight: 600;">← Back to Home</a>
 
 </div>
 

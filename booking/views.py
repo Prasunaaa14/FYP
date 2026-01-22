@@ -9,10 +9,10 @@ from account.models import Profile
 
 
 # =====================================================
-# CUSTOMER: SERVICE CATEGORIES PAGE
+# PUBLIC: SERVICE CATEGORIES PAGE (No Login Required)
 # =====================================================
-@login_required
 def service_categories(request):
+    """Public view - anyone can browse service categories"""
     categories = [
         ("painting", "Painting"),
         ("plumbing", "Plumbing"),
@@ -28,18 +28,30 @@ def service_categories(request):
 
 
 # =====================================================
-# CUSTOMER: SERVICES BY CATEGORY
+# PUBLIC: PROVIDERS BY CATEGORY (No Login Required)
 # =====================================================
-@login_required
 def providers_by_category(request, category):
-    services = Service.objects.filter(
+    """Public view - anyone can view providers in a category"""
+    from account.models import ProviderCategory
+    
+    # Get provider IDs that have THIS CATEGORY
+    # Filter by both category and is_verified status
+    provider_ids = ProviderCategory.objects.filter(
         category=category,
-        is_active=True
-    )
+        is_verified=True  # Only get verified categories
+    ).values_list('provider_id', flat=True)
+    
+    # Get VERIFIED providers with this verified category
+    providers = Profile.objects.filter(
+        id__in=provider_ids,
+        role="provider",
+        is_verified=True  # Only show verified providers
+    ).distinct()
 
     return render(request, "booking/providers_by_category.html", {
-        "services": services,
-        "category": category.capitalize()
+        "providers": providers,
+        "category": category.replace("_", " ").title(),
+        "is_authenticated": request.user.is_authenticated
     })
 
 
@@ -172,15 +184,13 @@ def provider_services(request):
 def add_service(request):
     profile = request.user.profile
 
+    # Block unverified providers from adding services
+    if not profile.is_verified:
+        messages.error(request, "Your account is not verified yet. Please wait for admin approval before adding services.")
+        return redirect("provider_dashboard")
+
     if request.method == "POST":
         category = request.POST.get("category")
-
-        if profile.verified_category and category != profile.verified_category:
-            messages.error(
-                request,
-                "You can only add services related to your verified skill."
-            )
-            return redirect("add_service")
 
         Service.objects.create(
             provider=profile,
@@ -246,10 +256,10 @@ def delete_service(request, service_id):
 
 
 # =====================================================
-# CUSTOMER: VIEW PROVIDER PROFILE
+# PUBLIC: VIEW PROVIDER PROFILE (No Login Required)
 # =====================================================
-@login_required
 def provider_profile(request, provider_id):
+    """Public view - anyone can view provider profile"""
     provider = get_object_or_404(
         Profile,
         id=provider_id,
@@ -264,7 +274,8 @@ def provider_profile(request, provider_id):
 
     return render(request, "booking/provider_profile.html", {
         "provider": provider,
-        "services": services
+        "services": services,
+        "is_authenticated": request.user.is_authenticated
     })
 
 

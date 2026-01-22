@@ -15,6 +15,22 @@
             font-weight: 600;
             margin-left: 10px;
         }
+        .login-prompt {
+            background: #fef3c7;
+            border: 1px solid #fbbf24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        .login-prompt a {
+            color: #1e40af;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .login-prompt a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -25,8 +41,14 @@
     <span class="verified-badge">✓ Verified Provider</span>
     {% endif %}
 </h1>
-<p>Location: {{ provider.location }}</p>
-<p>Verified Skill: {{ provider.verified_category|title }}</p>
+<p>Location: {{ provider.location|default:"Not specified" }}</p>
+<p>Email: {{ provider.user.email }}</p>
+
+{% if not is_authenticated %}
+<div class="login-prompt">
+    <p>🔒 To book a service, please <a href="{% url 'login' %}">Login</a> or <a href="{% url 'register' %}">Register</a> as a customer.</p>
+</div>
+{% endif %}
 
 <h2>Services Offered</h2>
 
@@ -36,13 +58,22 @@
         <p>{{ service.description }}</p>
         <p>Price: Rs {{ service.price }}</p>
 
-        <a href="{% url 'book_service' service.id %}">
-            Book This Service
-        </a>
+        {% if is_authenticated %}
+            <a href="{% url 'book_service' service.id %}" style="background: #1e40af; color: white; padding: 8px 16px; text-decoration: none; border-radius: 4px; display: inline-block;">
+                Book This Service
+            </a>
+        {% else %}
+            <a href="{% url 'login' %}?next={% url 'book_service' service.id %}" style="background: #6b7280; color: white; padding: 8px 16px; text-decoration: none; border-radius: 4px; display: inline-block;">
+                Login to Book
+            </a>
+        {% endif %}
     </div>
 {% empty %}
     <p>No services available.</p>
 {% endfor %}
+
+<br>
+<a href="{% url 'home' %}" style="color: #1e40af;">← Back to Home</a>
 
 </body>
 </html>
