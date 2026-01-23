@@ -47,13 +47,13 @@
       electrical, cleaning, and more. Book in minutes.
       </I>
     </p>
-<div class="search-box">
+<form action="{% url 'search_services' %}" method="GET" class="search-box">
   <div class="search-field">
     <svg class="search-icon" viewBox="0 0 24 24">
       <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/>
       <line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" stroke-width="2"/>
     </svg>
-    <input type="text" placeholder="What service do you need?" />
+    <input type="text" name="q" placeholder="What service do you need?" />
   </div>
 
   <div class="search-field">
@@ -62,11 +62,11 @@
             stroke="currentColor" stroke-width="2" fill="none"/>
       <circle cx="12" cy="11" r="2.5" fill="currentColor"/>
     </svg>
-    <input type="text" placeholder="Your location" />
+    <input type="text" name="location" placeholder="Your location" />
   </div>
 
-  <button class="search-btn">Find Pros</button>
-</div>
+  <button type="submit" class="search-btn">Find Pros</button>
+</form>
 
 
     <div class="hero-stats">

@@ -6,6 +6,7 @@
   <title>Apply as Provider | HomeService</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="{% static 'account/provider_register.css' %}">
 </head>
 <body>
@@ -38,7 +39,7 @@
       <div class="messages">
         {% for message in messages %}
           <div class="alert alert-{{ message.tags }} alert-box">
-            <strong>⚠️ {{ message }}</strong>
+            <strong><i class="bi bi-exclamation-circle"></i> {{ message }}</strong>
           </div>
         {% endfor %}
       </div>
@@ -50,14 +51,14 @@
       <!-- FULL NAME -->
       <label>Full Name</label>
       <div class="input-group">
-        <span>👤</span>
+        <i class="bi bi-person"></i>
         <input type="text" name="full_name" placeholder="Enter your full name" value="{{ request.POST.full_name }}" required>
       </div>
 
       <!-- EMAIL -->
       <label>Email</label>
       <div class="input-group">
-        <span>✉️</span>
+        <i class="bi bi-envelope"></i>
         <input type="email" name="email" placeholder="Enter your email" value="{{ request.POST.email }}" required>
       </div>
       {% if form.email.errors %}
@@ -71,7 +72,7 @@
       <!-- PHONE -->
       <label>Phone Number</label>
       <div class="input-group">
-        <span>📞</span>
+        <i class="bi bi-telephone"></i>
         <input type="tel" name="phone" placeholder="Enter your phone number" value="{{ request.POST.phone }}" required>
       </div>
       {% if form.phone.errors %}
@@ -105,13 +106,13 @@
         </label>
       </div>
       <small style="color: #f97316; font-size: 12px; display: block; margin-bottom: 16px; font-weight: 500;">
-        ⚠️ Important: Upload one certificate for each category you select (e.g., 2 categories = 2 certificates)
+        <i class="bi bi-exclamation-triangle"></i> Important: Upload one certificate for each category you select (e.g., 2 categories = 2 certificates)
       </small>
 
       <!-- EXPERIENCE -->
       <label>Experience (Years)</label>
       <div class="input-group">
-        <span>⏱</span>
+        <i class="bi bi-clock-history"></i>
         <input type="number" name="experience" min="0" placeholder="e.g. 3" required>
       </div>
 
@@ -127,7 +128,7 @@
           required
         >
         <small>
-          Accepted formats: PDF, JPG, PNG. You can add files in multiple picks—we'll keep them all here (Ctrl/Shift/⌘ lets you multi-select in one pick).
+          Accepted formats: PDF, JPG, PNG. You can add files in multiple picks - we'll keep them all here (Ctrl/Shift lets you multi-select in one pick).
         </small>
         <div id="fileList" style="margin-top: 10px; font-size: 13px; color: #059669;"></div>
       </div>
@@ -135,7 +136,7 @@
       <!-- PASSWORD -->
       <label>Password</label>
       <div class="input-group">
-        <span>🔒</span>
+        <i class="bi bi-lock"></i>
         <input
           type="password"
           id="providerPassword"
@@ -143,7 +144,7 @@
           placeholder="Create a password (min 8 characters)"
           required
         >
-        <span class="eye-icon" onclick="togglePassword()">👁</span>
+        <i class="bi bi-eye eye-icon" onclick="togglePassword()" id="passwordEye"></i>
       </div>
       {% if form.password.errors %}
         <div class="field-error">
@@ -159,7 +160,7 @@
       <!-- CONFIRM PASSWORD -->
       <label>Confirm Password</label>
       <div class="input-group">
-        <span>🔒</span>
+        <i class="bi bi-lock"></i>
         <input
           type="password"
           id="confirmProviderPassword"
@@ -167,7 +168,7 @@
           placeholder="Re-enter your password"
           required
         >
-        <span class="eye-icon" onclick="toggleConfirmPassword()">👁</span>
+        <i class="bi bi-eye eye-icon" onclick="toggleConfirmPassword()" id="confirmPasswordEye"></i>
       </div>
       {% if form.confirm_password.errors %}
         <div class="field-error">
@@ -202,21 +203,31 @@
 <script>
 function togglePassword() {
     const passwordInput = document.getElementById("providerPassword");
+    const eyeIcon = document.getElementById("passwordEye");
 
     if (passwordInput.type === "password") {
         passwordInput.type = "text";
+        eyeIcon.classList.remove("bi-eye");
+        eyeIcon.classList.add("bi-eye-slash");
     } else {
         passwordInput.type = "password";
+        eyeIcon.classList.remove("bi-eye-slash");
+        eyeIcon.classList.add("bi-eye");
     }
 }
 
 function toggleConfirmPassword() {
     const confirmInput = document.getElementById("confirmProviderPassword");
+    const eyeIcon = document.getElementById("confirmPasswordEye");
 
     if (confirmInput.type === "password") {
         confirmInput.type = "text";
+        eyeIcon.classList.remove("bi-eye");
+        eyeIcon.classList.add("bi-eye-slash");
     } else {
         confirmInput.type = "password";
+        eyeIcon.classList.remove("bi-eye-slash");
+        eyeIcon.classList.add("bi-eye");
     }
 }
 
@@ -235,9 +246,9 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
 
-    let fileNames = '<strong>✅ Selected files (' + files.length + '):</strong><br>';
+    let fileNames = '<strong><i class="bi bi-check-circle"></i> Selected files (' + files.length + '):</strong><br>';
     Array.from(files).forEach((file, idx) => {
-      fileNames += '📄 ' + (idx + 1) + '. ' + file.name + '<br>';
+      fileNames += '<i class="bi bi-file-earmark"></i> ' + (idx + 1) + '. ' + file.name + '<br>';
     });
     fileList.innerHTML = fileNames;
   }

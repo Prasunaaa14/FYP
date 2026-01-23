@@ -1,79 +1,478 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>{{ provider.user.first_name }} | Profile</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ provider.user.first_name }} | Provider Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-box {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #ff6b35, #ff8c42);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        .brand {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .nav-links a {
+            margin-left: 24px;
+            text-decoration: none;
+            color: #64748b;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #ff6b35;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Provider Header */
+        .provider-header {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .provider-top {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 1.5rem;
+        }
+
+        .provider-avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #ff6b35, #ff8c42);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .provider-info h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
         .verified-badge {
             display: inline-flex;
             align-items: center;
-            gap: 4px;
-            background: #dbeafe;
-            color: #1e40af;
-            padding: 6px 12px;
+            gap: 6px;
+            background: #10b981;
+            color: white;
+            padding: 6px 14px;
             border-radius: 20px;
             font-size: 14px;
             font-weight: 600;
-            margin-left: 10px;
         }
-        .login-prompt {
-            background: #fef3c7;
-            border: 1px solid #fbbf24;
-            padding: 15px;
+
+        .provider-meta {
+            display: flex;
+            gap: 24px;
+            color: #64748b;
+            font-size: 15px;
+            margin-top: 8px;
+        }
+
+        .provider-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .provider-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: #f8fafc;
             border-radius: 8px;
-            margin: 15px 0;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ff6b35;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        /* Login Prompt */
+        .login-prompt {
+            background: linear-gradient(135deg, #fff5f0, #ffe4d9);
+            border: 2px solid #ff6b35;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
             text-align: center;
         }
+
+        .login-prompt p {
+            margin-bottom: 1rem;
+            font-size: 16px;
+            color: #1e293b;
+        }
+
         .login-prompt a {
-            color: #1e40af;
+            color: #ff6b35;
             font-weight: 600;
             text-decoration: none;
+            padding: 10px 20px;
+            background: white;
+            border-radius: 8px;
+            display: inline-block;
+            margin: 0 8px;
+            transition: all 0.3s;
         }
+
         .login-prompt a:hover {
-            text-decoration: underline;
+            background: #ff6b35;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Services Section */
+        .services-section {
+            margin-top: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header h2 {
+            font-size: 24px;
+            color: #1e293b;
+        }
+
+        .service-count {
+            background: #fff5f0;
+            color: #ff6b35;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        .service-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(-4px);
+        }
+
+        .service-category {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #ffe4d9;
+            color: #ff6b35;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .service-name {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #1e293b;
+        }
+
+        .service-description {
+            font-size: 14px;
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .service-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 16px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .service-price {
+            font-size: 24px;
+            font-weight: 700;
+            color: #10b981;
+        }
+
+        .book-btn {
+            padding: 10px 24px;
+            background: #ff6b35;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .book-btn:hover {
+            background: #ff5722;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(255, 107, 53, 0.3);
+        }
+
+        .book-btn-disabled {
+            padding: 10px 24px;
+            background: #cbd5e1;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            display: inline-block;
+            cursor: not-allowed;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: white;
+            border-radius: 12px;
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+            color: #1e293b;
+        }
+
+        .empty-state p {
+            color: #64748b;
+        }
+
+        /* Back Link */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #64748b;
+            text-decoration: none;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: #ff6b35;
+        }
+
+        @media (max-width: 768px) {
+            .provider-top {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .provider-stats {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
 
-<h1>
-    {{ provider.user.first_name }}
-    {% if provider.is_verified %}
-    <span class="verified-badge">✓ Verified Provider</span>
-    {% endif %}
-</h1>
-<p>Location: {{ provider.location|default:"Not specified" }}</p>
-<p>Email: {{ provider.user.email }}</p>
-
-{% if not is_authenticated %}
-<div class="login-prompt">
-    <p>🔒 To book a service, please <a href="{% url 'login' %}">Login</a> or <a href="{% url 'register' %}">Register</a> as a customer.</p>
-</div>
-{% endif %}
-
-<h2>Services Offered</h2>
-
-{% for service in services %}
-    <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
-        <h3>{{ service.name }}</h3>
-        <p>{{ service.description }}</p>
-        <p>Price: Rs {{ service.price }}</p>
-
-        {% if is_authenticated %}
-            <a href="{% url 'book_service' service.id %}" style="background: #1e40af; color: white; padding: 8px 16px; text-decoration: none; border-radius: 4px; display: inline-block;">
-                Book This Service
-            </a>
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="logo-section">
+        <div class="logo-box">H</div>
+        <span class="brand">HomeService</span>
+    </div>
+    <div class="nav-links">
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'service_categories' %}">Categories</a>
+        {% if user.is_authenticated %}
+            <a href="{% if user.profile.role == 'provider' %}{% url 'provider_dashboard' %}{% else %}{% url 'customer_dashboard' %}{% endif %}">Dashboard</a>
         {% else %}
-            <a href="{% url 'login' %}?next={% url 'book_service' service.id %}" style="background: #6b7280; color: white; padding: 8px 16px; text-decoration: none; border-radius: 4px; display: inline-block;">
-                Login to Book
-            </a>
+            <a href="{% url 'login' %}">Login</a>
         {% endif %}
     </div>
-{% empty %}
-    <p>No services available.</p>
-{% endfor %}
+</nav>
 
-<br>
-<a href="{% url 'home' %}" style="color: #1e40af;">← Back to Home</a>
+<!-- Main Content -->
+<div class="container">
+    <a href="{% url 'home' %}" class="back-link">← Back to Home</a>
+
+    <!-- Provider Header -->
+    <div class="provider-header">
+        <div class="provider-top">
+            <div class="provider-avatar">👤</div>
+            <div class="provider-info">
+                <h1>
+                    {{ provider.user.first_name }}
+                    {% if provider.is_verified %}
+                    <span class="verified-badge">✓ Verified</span>
+                    {% endif %}
+                </h1>
+                <div class="provider-meta">
+                    {% if provider.location %}
+                    <span>📍 {{ provider.location }}</span>
+                    {% endif %}
+                    <span>✉️ {{ provider.user.email }}</span>
+                    <span>🛠 {{ services|length }} service{% if services|length != 1 %}s{% endif %}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="provider-stats">
+            <div class="stat-item">
+                <div class="stat-value">{{ services|length }}</div>
+                <div class="stat-label">Services Offered</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">4.8</div>
+                <div class="stat-label">Average Rating</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">150+</div>
+                <div class="stat-label">Jobs Completed</div>
+            </div>
+        </div>
+    </div>
+
+    {% if not is_authenticated %}
+    <div class="login-prompt">
+        <p>🔒 To book a service, please login or register as a customer</p>
+        <a href="{% url 'login' %}">Login</a>
+        <a href="{% url 'register' %}">Register</a>
+    </div>
+    {% endif %}
+
+    <!-- Services Section -->
+    <div class="services-section">
+        <div class="section-header">
+            <h2>Services Offered</h2>
+            <span class="service-count">{{ services|length }} available</span>
+        </div>
+
+        {% if services %}
+            <div class="services-grid">
+                {% for service in services %}
+                <div class="service-card">
+                    <span class="service-category">{{ service.get_category_display }}</span>
+                    <div class="service-name">{{ service.name }}</div>
+                    <div class="service-description">{{ service.description }}</div>
+                    <div class="service-footer">
+                        <div class="service-price">Rs {{ service.price }}</div>
+                        {% if is_authenticated %}
+                            <a href="{% url 'book_service' service.id %}" class="book-btn">
+                                Book Now
+                            </a>
+                        {% else %}
+                            <a href="{% url 'login' %}?next={% url 'book_service' service.id %}" class="book-btn-disabled">
+                                Login to Book
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">🛠️</div>
+                <h3>No Services Available</h3>
+                <p>This provider hasn't added any services yet.</p>
+            </div>
+        {% endif %}
+    </div>
+
+</div>
 
 </body>
 </html>

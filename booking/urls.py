@@ -6,6 +6,7 @@ urlpatterns = [
     # =====================
     # CUSTOMER SIDE
     # =====================
+    path("search/", views.search_services, name="search_services"),
     path("categories/", views.service_categories, name="service_categories"),
     path("category/<str:category>/", views.providers_by_category, name="providers_by_category"),
     path("book/<int:service_id>/", views.book_service, name="book_service"),

@@ -9,6 +9,59 @@ from account.models import Profile
 
 
 # =====================================================
+# PUBLIC: SEARCH SERVICES (No Login Required)
+# =====================================================
+def search_services(request):
+    """Search services by name/category and location, grouped by provider"""
+    search_query = request.GET.get('q', '').strip()
+    location_query = request.GET.get('location', '').strip()
+    
+    # Start with active services from verified providers
+    services = Service.objects.filter(
+        is_active=True,
+        provider__is_verified=True
+    ).select_related('provider__user')
+    
+    # Filter by search query (service name or category)
+    if search_query:
+        services = services.filter(
+            Q(name__icontains=search_query) |
+            Q(description__icontains=search_query) |
+            Q(category__icontains=search_query)
+        )
+    
+    # Filter by location
+    if location_query:
+        services = services.filter(
+            Q(location__icontains=location_query) |
+            Q(provider__location__icontains=location_query)
+        )
+    
+    # Group services by provider
+    providers_dict = {}
+    for service in services:
+        provider_id = service.provider.id
+        if provider_id not in providers_dict:
+            providers_dict[provider_id] = {
+                'provider': service.provider,
+                'services': []
+            }
+        providers_dict[provider_id]['services'].append(service)
+    
+    # Convert to list for template
+    providers_with_services = list(providers_dict.values())
+    
+    context = {
+        'providers_with_services': providers_with_services,
+        'search_query': search_query,
+        'location_query': location_query,
+        'total_results': len(providers_with_services)
+    }
+    
+    return render(request, "booking/search_results.html", context)
+
+
+# =====================================================
 # PUBLIC: SERVICE CATEGORIES PAGE (No Login Required)
 # =====================================================
 def service_categories(request):

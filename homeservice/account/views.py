@@ -3,9 +3,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.core.mail import send_mail
-from django.conf import settings
-from django.utils.crypto import get_random_string
 from .models import Profile
 
 
@@ -78,39 +75,15 @@ def provider_register(request):
             first_name=full_name
         )
 
-        verification_token = get_random_string(32)
-
         #CREATE PROFILE (location REMOVED)
         Profile.objects.create(
             user=user,
             role="provider",
             certificate=certificate,
-            is_verified=False,
-            email_token=verification_token
+            is_verified=False
         )
 
-        # (Optional) Email sending — safe to keep
-        verification_link = f"http://127.0.0.1:8000/account/verify-email/{verification_token}/"
-
-        send_mail(
-            subject="Verify your HomeService Provider Account",
-            message=f"""
-Hi {full_name},
-
-Please verify your email by clicking the link below:
-{verification_link}
-
-After verification, your account will be reviewed by admin.
-""",
-            from_email=settings.EMAIL_HOST_USER,
-            recipient_list=[email],
-            fail_silently=True  # prevents crash if email not configured
-        )
-
-        messages.success(
-            request,
-            "Provider account created successfully. Please verify your email."
-        )
+        messages.success(request, "Provider account created successfully. Please log in.")
         return redirect("login")
 
     return render(request, "account/provider_register.html")

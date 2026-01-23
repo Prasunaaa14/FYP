@@ -1,0 +1,430 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results | HomeService</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-box {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #ff6b35, #ff8c42);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        .brand {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .nav-links a {
+            margin-left: 24px;
+            text-decoration: none;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: #ff6b35;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Search Bar */
+        .search-bar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 250px;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #ff6b35;
+        }
+
+        .search-btn {
+            padding: 12px 24px;
+            background: #ff6b35;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .search-btn:hover {
+            background: #ff5722;
+        }
+
+        /* Results Header */
+        .results-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .results-header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .results-subtitle {
+            color: #64748b;
+            font-size: 15px;
+        }
+
+        .highlight {
+            color: #ff6b35;
+            font-weight: 600;
+        }
+
+        /* Provider Cards */
+        .provider-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: box-shadow 0.3s;
+        }
+
+        .provider-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .provider-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .provider-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #ff6b35, #ff8c42);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: white;
+        }
+
+        .provider-info h3 {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .provider-meta {
+            display: flex;
+            gap: 16px;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .verified-badge {
+            background: #10b981;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .services-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+            margin-top: 1rem;
+        }
+
+        .service-item {
+            padding: 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .service-item:hover {
+            border-color: #ff6b35;
+            background: #fff5f0;
+        }
+
+        .service-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #1e293b;
+        }
+
+        .service-category {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #ffe4d9;
+            color: #ff6b35;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .service-description {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .service-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .service-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: #10b981;
+        }
+
+        .book-btn {
+            padding: 8px 16px;
+            background: #ff6b35;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .book-btn:hover {
+            background: #ff5722;
+        }
+
+        .view-profile-btn {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 10px 20px;
+            background: #fff5f0;
+            color: #ff6b35;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .view-profile-btn:hover {
+            background: #ffe4d9;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: white;
+            border-radius: 12px;
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h2 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            color: #64748b;
+            margin-bottom: 1.5rem;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #ff6b35;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .back-btn:hover {
+            background: #ff5722;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="logo-section">
+        <div class="logo-box">H</div>
+        <span class="brand">HomeService</span>
+    </div>
+    <div class="nav-links">
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'service_categories' %}">Categories</a>
+        {% if user.is_authenticated %}
+            <a href="{% if user.profile.role == 'provider' %}{% url 'provider_dashboard' %}{% else %}{% url 'customer_dashboard' %}{% endif %}">Dashboard</a>
+        {% else %}
+            <a href="{% url 'login' %}">Login</a>
+        {% endif %}
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container">
+    <!-- Search Bar -->
+    <div class="search-bar">
+        <form action="{% url 'search_services' %}" method="GET" class="search-form">
+            <input 
+                type="text" 
+                name="q" 
+                class="search-input" 
+                placeholder="What service do you need?" 
+                value="{{ search_query }}"
+            >
+            <input 
+                type="text" 
+                name="location" 
+                class="search-input" 
+                placeholder="Your location" 
+                value="{{ location_query }}"
+            >
+            <button type="submit" class="search-btn">🔍 Search</button>
+        </form>
+    </div>
+
+    <!-- Results Header -->
+    <div class="results-header">
+        <h1>Search Results</h1>
+        <p class="results-subtitle">
+            Found <span class="highlight">{{ total_results }}</span> provider{% if total_results != 1 %}s{% endif %}
+            {% if search_query %} for "<span class="highlight">{{ search_query }}</span>"{% endif %}
+            {% if location_query %} in "<span class="highlight">{{ location_query }}</span>"{% endif %}
+        </p>
+    </div>
+
+    <!-- Results -->
+    {% if providers_with_services %}
+        {% for item in providers_with_services %}
+        <div class="provider-card">
+            <!-- Provider Header -->
+            <div class="provider-header">
+                <div class="provider-avatar">
+                    <i class="bi bi-person-fill" style="font-size: 32px;"></i>
+                </div>
+                <div class="provider-info">
+                    <h3>{{ item.provider.user.first_name }}</h3>
+                    <div class="provider-meta">
+                        {% if item.provider.is_verified %}
+                        <span class="verified-badge">✓ Verified</span>
+                        {% endif %}
+                        {% if item.provider.location %}
+                        <span>📍 {{ item.provider.location }}</span>
+                        {% endif %}
+                        <span>🛠 {{ item.services|length }} service{% if item.services|length != 1 %}s{% endif %} available</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Services List -->
+            <div class="services-list">
+                {% for service in item.services %}
+                <div class="service-item">
+                    <span class="service-category">{{ service.get_category_display }}</span>
+                    <div class="service-name">{{ service.name }}</div>
+                    <div class="service-description">{{ service.description|truncatewords:15 }}</div>
+                    <div class="service-footer">
+                        <div class="service-price">Rs. {{ service.price }}</div>
+                        <a href="{% url 'book_service' service.id %}" class="book-btn">Book Now</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <a href="{% url 'provider_profile' item.provider.id %}" class="view-profile-btn">
+                View Full Profile →
+            </a>
+        </div>
+        {% endfor %}
+
+    {% else %}
+        <!-- Empty State -->
+        <div class="empty-state">
+            <div class="empty-icon">🔍</div>
+            <h2>No results found</h2>
+            <p>
+                We couldn't find any providers matching your search. 
+                Try adjusting your search terms or browse our categories.
+            </p>
+            <a href="{% url 'service_categories' %}" class="back-btn">Browse Categories</a>
+        </div>
+    {% endif %}
+
+</div>
+
+</body>
+</html>

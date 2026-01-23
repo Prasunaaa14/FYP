@@ -57,11 +57,13 @@ class Profile(models.Model):
     # Admin verification (for providers)
     is_verified = models.BooleanField(default=False)
     
-    # ✅ EMAIL VERIFICATION TOKEN
+    # EMAIL VERIFICATION TOKEN / OTP
     email_token = models.CharField(
-        max_length=100,
+        max_length=64,
+        blank=True,
         null=True,
-        blank=True
+        unique=False,
+        help_text="Email verification code or token"
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
