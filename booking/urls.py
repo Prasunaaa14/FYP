@@ -38,4 +38,5 @@ urlpatterns = [
     path("messages/", views.messages_inbox, name="messages_inbox"),
     path("messages/<int:booking_id>/", views.view_messages, name="view_messages"),
 
+
 ]

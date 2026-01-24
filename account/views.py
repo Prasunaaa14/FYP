@@ -20,9 +20,8 @@ from .forms import (
     LoginForm
 )
 
-# ==========================
+
 # CUSTOMER REGISTER (EMAIL VERIFICATION REQUIRED)
-# ==========================
 def register(request):
     if request.method == "POST":
         form = CustomerRegistrationForm(request.POST)
@@ -301,3 +300,4 @@ def save_location(request):
     profile.location = request.POST.get("address", "")
     profile.save()
     return JsonResponse({"success": True})
+

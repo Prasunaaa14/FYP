@@ -8,9 +8,9 @@ from .models import Service, Booking, Message
 from account.models import Profile
 
 
-# =====================================================
+
 # PUBLIC: SEARCH SERVICES (No Login Required)
-# =====================================================
+
 def search_services(request):
     """Search services by name/category and location, grouped by provider"""
     search_query = request.GET.get('q', '').strip()
@@ -63,7 +63,7 @@ def search_services(request):
 
 # =====================================================
 # PUBLIC: SERVICE CATEGORIES PAGE (No Login Required)
-# =====================================================
+# 
 def service_categories(request):
     """Public view - anyone can browse service categories"""
     categories = [
@@ -80,9 +80,7 @@ def service_categories(request):
     })
 
 
-# =====================================================
 # PUBLIC: PROVIDERS BY CATEGORY (No Login Required)
-# =====================================================
 def providers_by_category(request, category):
     """Public view - anyone can view providers in a category"""
     from account.models import ProviderCategory
@@ -91,7 +89,6 @@ def providers_by_category(request, category):
     # Filter by both category and is_verified status
     provider_ids = ProviderCategory.objects.filter(
         category=category,
-        is_verified=True  # Only get verified categories
     ).values_list('provider_id', flat=True)
     
     # Get VERIFIED providers with this verified category
@@ -405,3 +402,5 @@ def view_messages(request, booking_id):
     }
     
     return render(request, "booking/messages.html", context)
+
+
