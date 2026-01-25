@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Providers | Admin</title>
+    <style>
+        body { font-family: Inter; background:#f8fafc; padding:30px; }
+        table {
+            width:100%;
+            background:white;
+            border-collapse: collapse;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        th, td {
+            padding:14px;
+            border-bottom:1px solid #e5e7eb;
+            text-align:left;
+        }
+        th { background:#f1f5f9; }
+
+        .badge {
+            padding:6px 10px;
+            border-radius:20px;
+            font-size:12px;
+            font-weight:600;
+        }
+        .pending { background:#fde68a; }
+        .approved { background:#bbf7d0; }
+        .rejected { background:#fecaca; }
+
+        .btn {
+            padding:6px 12px;
+            border-radius:8px;
+            text-decoration:none;
+            font-size:13px;
+            margin-right:5px;
+        }
+        .approve { background:#22c55e; color:white; }
+        .reject { background:#ef4444; color:white; }
+        .view { background:#3b82f6; color:white; }
+    </style>
+</head>
+<body>
+
+<h2>Service Providers</h2>
+
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+
+    {% for provider in providers %}
+    <tr>
+        <td>{{ provider.user.first_name }}</td>
+        <td>{{ provider.user.email }}</td>
+        <td>
+            {% if provider.is_verified %}
+                <span class="badge approved">Verified</span>
+            {% else %}
+                <span class="badge pending">Pending</span>
+            {% endif %}
+        </td>
+        <td>
+            <a href="{% url 'admin_provider_detail' provider.id %}" class="btn view">View</a>
+            {% if not provider.is_verified %}
+                <a href="{% url 'admin_approve_provider' provider.id %}" class="btn approve">Approve</a>
+                <a href="{% url 'admin_reject_provider' provider.id %}" class="btn reject">Reject</a>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>

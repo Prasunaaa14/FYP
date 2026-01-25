@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard | HomeService</title>
+    <style>
+        body {
+            font-family: Inter, sans-serif;
+            background: #f1f5f9;
+            padding: 30px;
+        }
+        h1 { margin-bottom: 20px; }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,.05);
+            text-align: center;
+        }
+
+        .card h2 { font-size: 28px; }
+        .card p { color: #64748b; }
+
+        .nav {
+            margin-top: 30px;
+        }
+
+        .nav a {
+            margin-right: 15px;
+            text-decoration: none;
+            padding: 10px 16px;
+            background: #f97316;
+            color: white;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Admin Dashboard</h1>
+
+<div class="stats">
+    <div class="card">
+        <h2>{{ users_count }}</h2>
+        <p>Total Users</p>
+    </div>
+    <div class="card">
+        <h2>{{ providers_count }}</h2>
+        <p>Providers</p>
+    </div>
+    <div class="card">
+        <h2>{{ pending_providers }}</h2>
+        <p>Pending Verification</p>
+    </div>
+    <div class="card">
+        <h2>{{ services_count }}</h2>
+        <p>Services</p>
+    </div>
+</div>
+
+<div class="nav">
+    <a href="{% url 'admin_users' %}">Users</a>
+    <a href="{% url 'admin_providers' %}">Providers</a>
+    <a href="{% url 'admin_services' %}">Services</a>
+</div>
+
+</body>
+</html>

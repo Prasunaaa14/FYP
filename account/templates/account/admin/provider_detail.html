@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Provider Detail</title>
+    <style>
+        body { font-family: Inter; background:#f8fafc; padding:30px; }
+        .card {
+            background:white;
+            padding:24px;
+            border-radius:14px;
+            width:600px;
+        }
+        .row { margin-bottom:12px; }
+        strong { color:#334155; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>{{ provider.user.first_name }}</h2>
+
+    <div class="row"><strong>Email:</strong> {{ provider.user.email }}</div>
+    <div class="row"><strong>Phone:</strong> {{ provider.phone }}</div>
+    <div class="row"><strong>Location:</strong> {{ provider.location }}</div>
+    <div class="row"><strong>Status:</strong>
+        {% if provider.is_verified %}
+            Verified
+        {% else %}
+            Pending
+        {% endif %}
+    </div>
+
+    <hr>
+
+    <h3>Certificates</h3>
+    {% for cert in provider.certificates.all %}
+        <img src="{{ cert.certificate.url }}" width="200">
+    {% empty %}
+        <p>No certificates</p>
+    {% endfor %}
+</div>
+
+</body>
+</html>

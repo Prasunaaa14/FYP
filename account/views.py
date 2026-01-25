@@ -1,5 +1,6 @@
 import random
 
+from .decorators import admin_only
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -280,17 +281,15 @@ def provider_dashboard(request):
     return render(request, "account/provider_dashboard.html", {"bookings": bookings})
 
 
-# ==========================
+
 # PROFILE
-# ==========================
 @login_required
 def profile_view(request):
     return render(request, "account/profile.html", {"profile": request.user.profile})
 
 
-# ==========================
+
 # SAVE LOCATION (AJAX)
-# ==========================
 @login_required
 @require_POST
 def save_location(request):
@@ -301,3 +300,70 @@ def save_location(request):
     profile.save()
     return JsonResponse({"success": True})
 
+# ADMIN DASHBOARD
+@login_required
+@admin_only
+def admin_dashboard(request):
+    context = {
+        "users_count": User.objects.count(),
+        "providers_count": Profile.objects.filter(role="provider").count(),
+        "pending_providers": Profile.objects.filter(role="provider", is_verified=False).count(),
+        "services_count": Service.objects.count(),
+    }
+    return render(request, "account/admin/dashboard.html", context)
+
+
+
+# ADMIN: USERS LIST
+@admin_only
+def admin_users(request):
+    users = User.objects.select_related("profile").all()
+    return render(request, "account/admin/users.html", {"users": users})
+
+
+
+# ADMIN: PROVIDERS LIST
+
+@admin_only
+def admin_providers(request):
+    providers = Profile.objects.filter(role="provider")
+    return render(request, "account/admin/providers.html", {"providers": providers})
+
+
+
+# ADMIN: PROVIDER DETAIL
+@admin_only
+def admin_provider_detail(request, provider_id):
+    provider = get_object_or_404(Profile, id=provider_id, role="provider")
+    return render(request, "account/admin/provider_detail.html", {"provider": provider})
+
+
+# ADMIN: APPROVE PROVIDER
+
+@admin_only
+def admin_approve_provider(request, provider_id):
+    provider = get_object_or_404(Profile, id=provider_id, role="provider")
+    provider.is_verified = True
+    provider.save()
+    messages.success(request, "Provider approved successfully.")
+    return redirect("admin_providers")
+
+
+
+# ADMIN: REJECT PROVIDER
+
+@admin_only
+def admin_reject_provider(request, provider_id):
+    provider = get_object_or_404(Profile, id=provider_id, role="provider")
+    provider.is_verified = False
+    provider.save()
+    messages.success(request, "Provider rejected.")
+    return redirect("admin_providers")
+
+
+
+# ADMIN: SERVICES LIST
+@admin_only
+def admin_services(request):
+    services = Service.objects.select_related("provider").all()
+    return render(request, "account/admin/services.html", {"services": services})
