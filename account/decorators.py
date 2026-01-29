@@ -16,3 +16,6 @@ def admin_required(view_func):
         return view_func(request, *args, **kwargs)
 
     return _wrapped_view
+
+# Alias for backwards compatibility
+admin_only = admin_required

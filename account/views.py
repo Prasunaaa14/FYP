@@ -239,6 +239,9 @@ def login_view(request):
 
                 login(request, user)
 
+                if profile.role == "admin":
+                    return redirect("admin_dashboard")
+                
                 if profile.role == "provider":
                     return redirect("provider_dashboard")
 

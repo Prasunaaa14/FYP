@@ -1,74 +1,271 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard | HomeService</title>
     <style>
-        body {
-            font-family: Inter, sans-serif;
-            background: #f1f5f9;
-            padding: 30px;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        h1 { margin-bottom: 20px; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8fafc;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 25px 35px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            color: #1e293b;
+            font-weight: 700;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: #f97316;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .logout-btn {
+            padding: 10px 20px;
+            background: #ef4444;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(239, 68, 68, 0.3);
+        }
 
         .stats {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 35px;
         }
 
         .card {
             background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,.05);
-            text-align: center;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
-        .card h2 { font-size: 28px; }
-        .card p { color: #64748b; }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: #f97316;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
+        .card:nth-child(1) .card-icon {
+            background: #f97316;
+        }
+
+        .card:nth-child(2) .card-icon {
+            background: #0f172a;
+        }
+
+        .card:nth-child(3) .card-icon {
+            background: #fb923c;
+        }
+
+        .card:nth-child(4) .card-icon {
+            background: #1e293b;
+        }
+
+        .card h2 {
+            font-size: 42px;
+            color: #1e293b;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .card p {
+            color: #64748b;
+            font-size: 16px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .nav-section h2 {
+            font-size: 24px;
+            color: #1e293b;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
 
         .nav {
-            margin-top: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
         }
 
         .nav a {
-            margin-right: 15px;
-            text-decoration: none;
-            padding: 10px 16px;
+            padding: 18px 25px;
             background: #f97316;
             color: white;
-            border-radius: 8px;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
+            font-size: 16px;
+        }
+
+        .nav a:hover {
+            background: #ea580c;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(249, 115, 22, 0.5);
+        }
+
+        .nav a:nth-child(2) {
+            background: #0f172a;
+            box-shadow: 0 4px 15px rgba(15, 23, 42, 0.3);
+        }
+
+        .nav a:nth-child(2):hover {
+            background: #1e293b;
+            box-shadow: 0 8px 25px rgba(15, 23, 42, 0.5);
+        }
+
+        .nav a:nth-child(3) {
+            background: #fb923c;
+            box-shadow: 0 4px 15px rgba(251, 146, 60, 0.3);
+        }
+
+        .nav a:nth-child(3):hover {
+            background: #f97316;
+            box-shadow: 0 8px 25px rgba(251, 146, 60, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .nav {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Admin Dashboard</h1>
+            <div class="user-info">
+                <div class="user-avatar">A</div>
+                <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+            </div>
+        </div>
 
-<h1>Admin Dashboard</h1>
+        <div class="stats">
+            <div class="card">
+                <div class="card-icon">👥</div>
+                <h2>{{ users_count }}</h2>
+                <p>Total Users</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🔧</div>
+                <h2>{{ providers_count }}</h2>
+                <p>Providers</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">⏳</div>
+                <h2>{{ pending_providers }}</h2>
+                <p>Pending Verification</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">⚙️</div>
+                <h2>{{ services_count }}</h2>
+                <p>Services</p>
+            </div>
+        </div>
 
-<div class="stats">
-    <div class="card">
-        <h2>{{ users_count }}</h2>
-        <p>Total Users</p>
+        <div class="nav-section">
+            <h2>Quick Actions</h2>
+            <div class="nav">
+                <a href="{% url 'admin_users' %}">👥 Manage Users</a>
+                <a href="{% url 'admin_providers' %}">🔧 Manage Providers</a>
+                <a href="{% url 'admin_services' %}">⚙️ Manage Services</a>
+            </div>
+        </div>
     </div>
-    <div class="card">
-        <h2>{{ providers_count }}</h2>
-        <p>Providers</p>
-    </div>
-    <div class="card">
-        <h2>{{ pending_providers }}</h2>
-        <p>Pending Verification</p>
-    </div>
-    <div class="card">
-        <h2>{{ services_count }}</h2>
-        <p>Services</p>
-    </div>
-</div>
-
-<div class="nav">
-    <a href="{% url 'admin_users' %}">Users</a>
-    <a href="{% url 'admin_providers' %}">Providers</a>
-    <a href="{% url 'admin_services' %}">Services</a>
-</div>
-
 </body>
 </html>
